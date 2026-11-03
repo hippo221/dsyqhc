@@ -1,0 +1,508 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QHC 미션 신분증</title><style>
+/* 한 줄 세로 흐름: 신분증 미리보기 → 별명 → 셀카 → 저장 */
+:root{
+  --bg:#EDF0F5; --surface:#FFFFFF; --ink:#17213A; --muted:#566079; --line:#D3D9E4;
+  --q:#2F5BD3; --c:#1C805A; --c-soft:#E0F2E9; --bad-soft:#FBE6E3; --on-ink:#FFFFFF;
+  --font:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F141C; --surface:#18202D; --ink:#E7ECF5; --muted:#9BA6BB; --line:#2B3547;
+  --q:#86A6FF; --c:#55C892; --c-soft:#15342A; --bad-soft:#3E1F1C; --on-ink:#0F141C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F141C; --surface:#18202D; --ink:#E7ECF5; --muted:#9BA6BB; --line:#2B3547;
+  --q:#86A6FF; --c:#55C892; --c-soft:#15342A; --bad-soft:#3E1F1C; --on-ink:#0F141C; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+img{max-width:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:520px;margin:0 auto;padding-block:18px 28px;display:grid;gap:14px}
+.kicker{font-size:.8rem;font-weight:800;letter-spacing:.08em;color:var(--muted);margin:0}
+h1{font-size:1.45rem;line-height:1.3;margin:2px 0 0;text-wrap:balance}
+p{margin:0}
+.muted{color:var(--muted);font-size:.9rem}
+#card{width:100%;height:auto;display:block;border-radius:14px;border:1.5px solid var(--line);background:#E8ECF2}
+#final{width:100%;height:auto;display:block;border-radius:14px;border:2px solid var(--c);-webkit-touch-callout:default}
+label.lab{font-weight:700;font-size:.95rem;display:block;margin-bottom:6px}
+input[type=text]{font:inherit;color:inherit;background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:11px 12px;width:100%}
+.btn{display:flex;align-items:center;justify-content:center;font:inherit;font-weight:800;border-radius:12px;padding:14px 18px;min-height:54px;cursor:pointer;text-align:center;width:100%}
+.btn.main{background:var(--ink);color:var(--on-ink);border:0}
+.btn.sub{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.note{border-radius:10px;padding:11px 14px;background:var(--c-soft);font-size:.95rem}
+.note.bad{background:var(--bad-soft)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+:focus-visible{outline:3px solid var(--q);outline-offset:2px}
+.theme{margin-top:6px;font-size:.95rem;color:var(--muted)}
+.theme b{color:var(--ink)}
+.rare{display:inline-block;background:#E8B526;color:#3A2806;font-weight:800;border-radius:999px;padding:1px 10px;font-size:.85rem}
+</style></head><body>
+<div class="wrap">
+  <header>
+    <p class="kicker">2026 부산교육한마당 · 동수영중학교 연구학교관</p>
+    <h1>나의 탐정 신분증 완성하기</h1>
+    <p class="theme" id="theme"></p>
+  </header>
+  <div id="bad" class="note bad" hidden>신분증 정보를 읽지 못했어요. 부스 화면의 QR을 다시 찍어 주세요.</div>
+  <div id="ok" hidden>
+    <div style="display:grid;gap:14px">
+      <img id="final" alt="탐정 신분증">
+      <p class="muted" id="saveHint">완성된 신분증 이미지를 길게 누르면 사진에 저장할 수 있어요.</p>
+      <div>
+        <label class="lab" for="nick">신분증에 쓸 별명 (8자 이내, 실명 대신 별명 추천)</label>
+        <input type="text" id="nick" maxlength="8" autocomplete="off" placeholder="예: 증거왕">
+      </div>
+      <input type="file" id="file" class="vh" accept="image/*" capture="user">
+      <label for="file" class="btn main" id="shotLabel">셀카 찍기</label>
+      <button type="button" class="btn sub" id="clearPhoto" hidden>사진 빼기</button>
+      <button type="button" class="btn sub" id="dl" hidden>이미지로 저장</button>
+      <p class="note">사진은 이 휴대폰 안에서만 신분증에 합쳐지고, 어디에도 올라가지 않아요. 인포데스크에서 신분증 번호를 보여 주면 기념품을 드려요.</p>
+    </div>
+  </div>
+</div>
+<canvas id="cv" hidden></canvas>
+<script>
+/* ===== 공통 데이터·신분증 그리기 (부스·휴대폰 공용) ===== */
+var QHC = (function () {
+  'use strict';
+  var CIRC = ['①', '②', '③'];
+  var QB = '그렇게 판단한 근거를 하나씩 알려 줘.';
+  var QC = '증거 4개와 네 결론이 서로 맞는지 확인해 줘.';
+  var LEVELS = [
+    { id: 'e', name: '초등', how: '그림 속 증거 찾기' },
+    { id: 'm', name: '중등', how: '기록과 규칙 확인하기' },
+    { id: 'h', name: '고등', how: '추론의 함정 찾기' }
+  ];
+
+  var CASES = [
+    { // 0 초등
+      id: 'lettuce', lv: 0, title: '텃밭 상추 실종 사건',
+      intro: '학교 텃밭의 상추 잎이 하룻밤 사이에 많이 사라졌어요. AI 탐정이 범인을 찾았다고 해요.',
+      ev: [
+        { tag: '그물망', text: '상추 위에 촘촘한 그물망이 덮여 있고, 찢어진 곳은 없어요.' },
+        { tag: '흙', text: '그물망 가장자리 아래 흙이 파여 작은 굴이 생겼어요.' },
+        { tag: '잎', text: '땅에서 가까운 아래쪽 잎부터 잘려 있어요.' },
+        { tag: '사육장', text: "옆 사육장 토끼 '당근이'가 어젯밤 밖에 나왔다가 아침에 돌아왔어요." }
+      ],
+      qa: '범인이 누구야?', short: '범인은 새입니다.',
+      sents: ['새들은 채소 잎을 좋아합니다.', '새가 하늘에서 날아 내려와 상추 잎을 쪼아 먹었습니다.', '그러니 텃밭에 허수아비를 세우면 됩니다.'],
+      wrong: 1, evOk: [0, 2],
+      sentHint: ['①은 일반적인 이야기예요. 그림의 증거와 부딪히는 문장을 찾아보세요.', '', '③은 ②가 맞다고 믿고 한 말이에요. 출발점이 된 문장을 찾아보세요.'],
+      evHint: ['', '이 증거는 다른 범인을 가리켜요. ②의 "하늘에서 날아 내려와"와 부딪히는 증거를 찾아보세요.', '', '이 증거는 다른 범인을 가리켜요. ②의 "하늘에서 날아 내려와"와 부딪히는 증거를 찾아보세요.'],
+      explain: '그물망이 찢어진 곳 없이 덮여 있으니 새는 위에서 들어올 수 없어요. 잎도 땅에서 가까운 쪽부터 잘렸지요.',
+      aiGood: 'AI는 상추가 동물에게 먹혔다는 것까지는 맞게 짚었어요. 범인을 고를 때 증거 #1을 놓쳤을 뿐이에요.',
+      aiFix: '지적 고마워요! 그물망이 멀쩡하니 새는 들어올 수 없었네요. 굴과 발자국을 보면 토끼 당근이가 그물 아래로 들어왔을 가능성이 커요. 사육장 문부터 점검해 볼까요?',
+      concl: [
+        { t: '토끼가 그물 아래 굴로 들어와 먹었다', k: 'good', fb: '증거 #2·#3·#4와 모두 맞는 판단이에요!' },
+        { t: '새가 그물을 뚫고 들어와 먹었다', k: 'bad', fb: '증거 #1을 다시 보세요. 그물망에는 찢어진 곳이 없어요.' },
+        { t: '아직 정할 수 없다. 증거를 더 모아야 한다', k: 'ok', fb: '좋아요. 서두르지 않는 것도 좋은 탐정의 자세예요.' }
+      ]
+    },
+    { // 1 중등
+      id: 'library', lv: 1, title: '도서관 연체 사건',
+      intro: '도서관 AI가 민지에게 "책을 늦게 반납했으니 일주일 동안 대출할 수 없다"고 알렸어요. 정말 늦었을까요?',
+      ev: [
+        { tag: '대출증', text: '민지는 11월 3일에 책을 빌렸다.' },
+        { tag: '대출 규칙', text: '책은 빌린 날부터 14일 동안 빌릴 수 있다.' },
+        { tag: '반납 기록', text: '민지는 11월 15일에 책을 반납했다.' },
+        { tag: '연체 규칙', text: '반납 기한이 지나서 돌려주면 일주일 동안 대출이 정지된다.' }
+      ],
+      qa: '민지는 연체했어?', short: '네, 민지는 연체했습니다.',
+      sents: ['민지는 11월 3일에 책을 빌렸습니다.', '반납 기한은 빌린 날부터 일주일 뒤인 11월 10일입니다.', '따라서 11월 15일에 반납한 민지는 연체이므로 대출이 정지됩니다.'],
+      wrong: 1, evOk: [1],
+      sentHint: ['①은 대출증(증거 #1)과 같아요. 맞는 문장이에요.', '', '③은 ②의 기한을 믿고 내린 결론이에요. 출발점 문장을 찾아보세요.'],
+      evHint: ['대출증은 ①과 같아요. ②의 "일주일 뒤"가 맞는지 확인할 규칙을 찾아보세요.', '', '반납 기록은 ③과 관련 있어요. ②의 기한을 정하는 증거를 찾아보세요.', '연체 규칙은 기한이 지난 뒤의 일이에요. 기한 자체를 정하는 규칙을 찾아보세요.'],
+      explain: '대출 기간은 14일이라 기한은 11월 17일이에요. 11월 15일 반납은 기한 안이에요. AI가 규칙을 잘못 적용했어요.',
+      aiGood: 'AI는 빌린 날(문장 ①)을 정확히 읽었어요. 규칙을 적용하는 계산에서 실수했을 뿐이에요.',
+      aiFix: '제가 대출 기간을 일주일로 잘못 계산했어요. 기한은 11월 17일이라 민지는 연체가 아니에요. 대출 정지 안내를 취소하고 민지에게 다시 알릴게요.',
+      concl: [
+        { t: '기한(11월 17일) 안에 반납했으니 연체가 아니다', k: 'good', fb: '규칙을 정확히 적용한 판단이에요!' },
+        { t: '11월 10일이 지났으니 연체다', k: 'bad', fb: '증거 #2를 다시 보세요. 대출 기간은 14일이에요.' },
+        { t: '반납 날짜를 몰라서 판단할 수 없다', k: 'bad', fb: '증거 #3에 반납 날짜가 있어요.' }
+      ]
+    },
+    { // 2 고등
+      id: 'icecream', lv: 2, title: '아이스크림과 물놀이 사고',
+      intro: 'AI가 1년 치 자료를 분석해 "아이스크림이 물놀이 사고를 부른다"는 보고서를 썼어요.',
+      ev: [
+        { tag: '월별 그래프', text: '아이스크림 판매량과 물놀이 사고 건수가 모두 7~8월에 가장 많다.' },
+        { tag: '기온 자료', text: '7~8월은 기온이 가장 높고, 물놀이하는 사람도 가장 많다.' },
+        { tag: '사고 원인 조사', text: '물놀이 사고의 주된 원인은 수영 미숙과 안전 수칙 위반이다.' },
+        { tag: '분석 방법', text: '두 수치가 같은 달에 늘었는지만 비교했다. 아이스크림을 먹은 사람을 따로 조사하지 않았다.' }
+      ],
+      qa: '물놀이 사고를 줄이려면 어떻게 해야 해?', short: '여름에 아이스크림 판매를 줄이면 됩니다.',
+      sents: ['7~8월에 아이스크림 판매량과 물놀이 사고가 함께 가장 많습니다.', '따라서 아이스크림을 먹는 것이 물놀이 사고를 일으킵니다.', '그러니 여름에 아이스크림 판매를 줄이면 사고를 막을 수 있습니다.'],
+      wrong: 1, evOk: [1, 2, 3],
+      sentHint: ['①은 그래프(증거 #1)와 같은 사실이에요. 사실에서 결론으로 건너뛰는 곳을 찾아보세요.', '', '③은 ②를 믿고 내린 처방이에요. 출발점이 된 문장을 찾아보세요.'],
+      evHint: ['그래프는 ①과 같은 내용이에요. ②의 "일으킵니다"를 흔드는 증거를 찾아보세요.', '', '', ''],
+      explain: '함께 늘었다고 원인인 것은 아니에요. 더운 날씨가 두 수치를 함께 늘렸을 수 있고(증거 #2), 실제 사고 원인은 따로 있어요(증거 #3). 이것을 상관과 인과의 혼동이라고 해요.',
+      aiGood: 'AI는 그래프(문장 ①)를 정확히 읽었어요. 사실에서 원인으로 건너뛸 때 실수했을 뿐이에요.',
+      aiFix: '맞아요. 함께 늘었다고 원인이라고 할 수는 없어요. 더운 날씨가 공통 원인일 수 있으니, 보고서 결론을 여름철 물놀이 안전 교육 제안으로 고칠게요.',
+      concl: [
+        { t: '더운 날씨와 물놀이 인원이 두 수치를 함께 늘렸다. 안전 교육이 필요하다', k: 'good', fb: '공통 원인을 찾아낸 날카로운 판단이에요!' },
+        { t: '아이스크림이 사고의 원인이다', k: 'bad', fb: '증거 #3과 #4를 다시 보세요. 아이스크림과 사고를 직접 이은 조사는 없어요.' },
+        { t: '아직 단정할 수 없다. 아이스크림을 먹은 사람과 사고를 직접 비교해 봐야 한다', k: 'ok', fb: '좋아요. 원인을 확인하는 방법까지 떠올렸네요.' }
+      ]
+    }
+  ];
+
+  var DEC = ['AI의 답을 그대로 믿는다', '맞는 부분은 살리고, 틀린 부분은 AI에게 고쳐 달라고 한다', 'AI의 답은 모두 버리고 혼자 해결한다'];
+  var DEC_FB = ['틀린 문장이 있었어요. 확인 없이 그대로 믿으면 잘못된 결론을 낼 수 있어요.', '', 'AI는 맞게 정리한 부분도 있었어요. 다 버리기보다 확인하고 고쳐 쓰면 더 빠르고 정확해요.'];
+  var DEC_PAST = ['AI의 답을 그대로 믿었어요.', '맞는 부분은 살리고, 틀린 부분은 AI와 함께 고쳤어요.', 'AI의 답을 버리고 혼자 해결했어요.'];
+
+  /* ---------- 신분증 디자인: 특별 2종 + 희귀 2종 ---------- */
+  var THEMES = [
+    { key: 'noir', grade: 'special', name: '명탐정', title: '명탐정 신분증' },
+    { key: 'file', grade: 'special', name: '사건 파일', title: '사건 파일 요원증' },
+    { key: 'gold', grade: 'rare', name: '황금 탐정', title: '전설의 황금 탐정' },
+    { key: 'prism', grade: 'rare', name: '프리즘 탐정', title: '프리즘 탐정 신분증' }
+  ];
+  var GRADE_NAME = { special: '특별', rare: '당첨' };
+  function themeOf(grade) {
+    var pool = []; THEMES.forEach(function (t, i) { if (t.grade === grade) pool.push(i); });
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+  function rankOf(r) { var s = r.sf + r.ef; return s === 2 ? '단서 저격수' : s === 1 ? '끈질긴 추적자' : '포기하지 않는 탐정'; }
+
+  /* ---------- 결과 코드: 개인정보 없이 선택 결과만(ASCII 문자·숫자·하이픈) ---------- */
+  function encode(r) { return ['qA', r.ci, r.q1, '' + r.sf + r.ef, r.ep, r.dec, r.co, r.no, r.md, r.th].join('-'); }
+  function int(x, max) { var n = parseInt(x, 10); return (isNaN(n) || n < 0 || n > max) ? null : n; }
+  function decode(code) {
+    var p = String(code || '').replace(/^#/, '').split('-');
+    if (p[0] !== 'qA' || p.length < 10) return null;
+    var r = { ci: int(p[1], CASES.length - 1), q1: int(p[2], 2), sf: p[3] && p[3][0] === '1' ? 1 : 0, ef: p[3] && p[3][1] === '1' ? 1 : 0,
+      ep: int(p[4], 3), dec: int(p[5], 2), co: int(p[6], 2), no: p[7], md: p[8], th: int(p[9], THEMES.length - 1) };
+    if (r.ci === null || r.q1 === null || r.ep === null || r.dec === null || r.co === null || r.th === null) return null;
+    if (!/^[A-E][0-9]{3}$/.test(r.no || '') || !/^[0-9]{4}$/.test(r.md || '')) return null;
+    return r;
+  }
+  function card(r) {
+    var c = CASES[r.ci], T = THEMES[r.th];
+    var q = r.q1 === 0 ? '“' + c.qa + '” → 결론만 돌아와 근거를 다시 물었어요.' : '“' + (r.q1 === 1 ? QB : QC) + '”';
+    return {
+      theme: T, grade: T.grade, gradeName: GRADE_NAME[T.grade], rank: rankOf(r), no: r.no, md: r.md,
+      level: LEVELS[c.lv].name, caseTitle: c.title,
+      rows: [
+        { b: 'Q', label: '나의 질문', text: q },
+        { b: 'H', label: '찾은 오류', text: 'AI 문장 ' + CIRC[c.wrong] + ' “' + c.sents[c.wrong] + '”가 증거 #' + (r.ep + 1) + '(' + c.ev[r.ep].tag + ')에 어긋났어요.' },
+        { b: 'C', label: 'AI와 함께 내린 판단', text: DEC_PAST[r.dec] + ' 최종 결론: ' + c.concl[r.co].t }
+      ]
+    };
+  }
+
+  /* ---------- 그리기 도구 ---------- */
+  var FONT = '"Pretendard","Apple SD Gothic Neo","Malgun Gothic","맑은 고딕","Noto Sans KR",sans-serif';
+  var SERIF = '"Noto Serif KR","Nanum Myeongjo","AppleMyungjo","Batang",' + FONT;
+  var BADGE = { Q: '#3A66DE', H: '#C47A0C', C: '#1F8D63' };
+  var W = 1080, H = 1350;
+  function rr(x, cx, y, w, h, r) {
+    x.beginPath(); x.moveTo(cx + r, y); x.lineTo(cx + w - r, y); x.quadraticCurveTo(cx + w, y, cx + w, y + r);
+    x.lineTo(cx + w, y + h - r); x.quadraticCurveTo(cx + w, y + h, cx + w - r, y + h); x.lineTo(cx + r, y + h);
+    x.quadraticCurveTo(cx, y + h, cx, y + h - r); x.lineTo(cx, y + r); x.quadraticCurveTo(cx, y, cx + r, y); x.closePath();
+  }
+  function wrap(x, text, maxW, maxLines) {
+    var chars = Array.from(String(text)), lines = [], line = '';
+    for (var i = 0; i < chars.length; i++) {
+      var t = line + chars[i];
+      if (x.measureText(t).width > maxW && line) {
+        var sp = line.lastIndexOf(' ');
+        if (sp > line.length * 0.6) { lines.push(line.slice(0, sp)); line = line.slice(sp + 1) + chars[i]; }
+        else { lines.push(line); line = chars[i].trim() ? chars[i] : ''; }
+      } else line = t;
+    }
+    if (line) lines.push(line);
+    if (lines.length > maxLines) {
+      lines = lines.slice(0, maxLines);
+      var last = lines[maxLines - 1];
+      while (last.length && x.measureText(last + '…').width > maxW) last = last.slice(0, -1);
+      lines[maxLines - 1] = last + '…';
+    }
+    return lines;
+  }
+  function rng(seed) { var s = seed >>> 0 || 1; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+  function sparkle(x, cx, cy, r) {
+    x.beginPath(); x.moveTo(cx, cy - r); x.quadraticCurveTo(cx, cy, cx + r, cy); x.quadraticCurveTo(cx, cy, cx, cy + r);
+    x.quadraticCurveTo(cx, cy, cx - r, cy); x.quadraticCurveTo(cx, cy, cx, cy - r); x.fill();
+  }
+  function goldGrad(x, x0, y0, x1, y1) {
+    var g = x.createLinearGradient(x0, y0, x1, y1);
+    g.addColorStop(0, '#8A6418'); g.addColorStop(0.25, '#F7DC7A'); g.addColorStop(0.5, '#B8892A'); g.addColorStop(0.75, '#FFF1B8'); g.addColorStop(1, '#9C7420');
+    return g;
+  }
+  function rainbow(x, x0, y0, x1, y1) {
+    var g = x.createLinearGradient(x0, y0, x1, y1);
+    ['#FF7EB6', '#FFB86B', '#FFE66B', '#7EE8B0', '#6FD3FF', '#9C8CFF', '#FF7EB6'].forEach(function (c, i, a) { g.addColorStop(i / (a.length - 1), c); });
+    return g;
+  }
+  function magnifier(x, cx, cy, r, ring, glass) {
+    x.save(); x.lineCap = 'round';
+    x.strokeStyle = ring; x.lineWidth = r * 0.42; x.beginPath(); x.moveTo(cx + r * 0.72, cy + r * 0.72); x.lineTo(cx + r * 1.75, cy + r * 1.75); x.stroke();
+    x.fillStyle = glass; x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.fill();
+    x.lineWidth = r * 0.2; x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.stroke();
+    x.restore();
+  }
+  function pill(x, text, cx, cy, fill, ink, stroke) {
+    x.font = '800 26px ' + FONT; var w = x.measureText(text).width + 44;
+    rr(x, cx, cy, w, 46, 23);
+    if (fill) { x.fillStyle = fill; x.fill(); }
+    if (stroke) { x.strokeStyle = stroke; x.lineWidth = 2.5; x.stroke(); }
+    x.fillStyle = ink; x.textAlign = 'left'; x.fillText(text, cx + 22, cy + 32);
+    return w;
+  }
+
+  /* ---------- 테마별 장식 ---------- */
+  var DECO = {
+    noir: {
+      ink: '#1A2036', sub: '#7A705A', line: '#E0D5BC', stamp: '#9E2B25', rank: '#7A5A10', shape: 'rect',
+      bg: function (x) {
+        x.fillStyle = '#121933'; x.fillRect(0, 0, W, H);
+        x.strokeStyle = 'rgba(233,200,115,.07)'; x.lineWidth = 2;
+        for (var i = 0; i < 40; i++) { var a = Math.PI * (i / 40); x.beginPath(); x.moveTo(W / 2, H + 40); x.lineTo(W / 2 + Math.cos(a) * 1600, H + 40 - Math.sin(a) * 1600); x.stroke(); }
+      },
+      card: function (x, T) {
+        x.fillStyle = '#F5EFE2'; rr(x, 44, 44, W - 88, H - 88, 30); x.fill();
+        x.save(); rr(x, 44, 44, W - 88, H - 88, 30); x.clip();
+        x.fillStyle = '#121933'; x.fillRect(44, 44, W - 88, 210);
+        x.strokeStyle = '#C9A24A'; x.lineWidth = 3; x.beginPath(); x.moveTo(44, 248); x.lineTo(W - 44, 248); x.moveTo(44, 256); x.lineTo(W - 44, 256); x.stroke();
+        x.restore();
+        // 아르데코 모서리
+        x.strokeStyle = '#C9A24A'; x.lineWidth = 3;
+        [[70, 282, 1, 1], [W - 70, 282, -1, 1], [70, H - 70, 1, -1], [W - 70, H - 70, -1, -1]].forEach(function (c) {
+          x.beginPath(); x.moveTo(c[0], c[1] + c[3] * 60); x.lineTo(c[0], c[1]); x.lineTo(c[0] + c[2] * 60, c[1]);
+          x.moveTo(c[0] + c[2] * 12, c[1] + c[3] * 40); x.lineTo(c[0] + c[2] * 12, c[1] + c[3] * 12); x.lineTo(c[0] + c[2] * 40, c[1] + c[3] * 12); x.stroke();
+        });
+        pill(x, '특별 등급', 96, 76, null, '#E9C873', '#C9A24A');
+        x.fillStyle = '#E9C873'; x.font = '800 64px ' + SERIF; x.fillText(T.title, 96, 196);
+        x.strokeStyle = '#C9A24A'; x.lineWidth = 2; x.beginPath(); x.arc(W - 170, 150, 72, 0, Math.PI * 2); x.stroke();
+        x.beginPath(); x.arc(W - 170, 150, 62, 0, Math.PI * 2); x.stroke();
+        magnifier(x, W - 182, 138, 30, '#E9C873', 'rgba(233,200,115,.15)');
+      },
+      frame: function (x, clip) { x.strokeStyle = '#C9A24A'; x.lineWidth = 6; clip(); x.stroke(); x.lineWidth = 2; x.strokeRect(84, 278, 344, 414); }
+    },
+    file: {
+      ink: '#3B2A16', sub: '#86693A', line: '#C9AE73', stamp: '#B3261E', rank: '#8A2B12', shape: 'polaroid',
+      bg: function (x, R) {
+        x.fillStyle = '#2A2A2D'; x.fillRect(0, 0, W, H);
+        for (var i = 0; i < 900; i++) { x.fillStyle = 'rgba(255,255,255,' + (R() * 0.05).toFixed(3) + ')'; x.fillRect(R() * W, R() * H, 2, 2); }
+      },
+      card: function (x, T) {
+        // 서류철 탭 + 본체
+        x.save(); x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = 24; x.shadowOffsetY = 8;
+        x.fillStyle = '#D9BF84';
+        x.beginPath(); x.moveTo(60, 120); x.lineTo(60, 64); x.quadraticCurveTo(60, 40, 84, 40); x.lineTo(380, 40); x.quadraticCurveTo(400, 40, 410, 60); x.lineTo(430, 100); x.lineTo(W - 60, 100); x.lineTo(W - 60, H - 44); x.lineTo(60, H - 44); x.closePath(); x.fill();
+        x.restore();
+        x.fillStyle = '#E8D3A2'; x.fillRect(60, 100, W - 120, H - 144);
+        x.fillStyle = '#5A4422'; x.font = '800 24px ' + FONT; x.fillText('CASE FILE · 사건 파일', 92, 82);
+        // 증거 테이프
+        x.save(); x.translate(W - 210, 150); x.rotate(0.42);
+        x.fillStyle = '#F2C230'; x.fillRect(-260, -26, 520, 52);
+        x.fillStyle = '#1D1D1D'; for (var s = -260; s < 260; s += 44) { x.beginPath(); x.moveTo(s, -26); x.lineTo(s + 22, -26); x.lineTo(s + 4, 26); x.lineTo(s - 18, 26); x.fill(); }
+        x.fillStyle = '#F2C230'; x.fillRect(-150, -18, 300, 36);
+        x.fillStyle = '#1D1D1D'; x.font = '800 22px ' + FONT; x.textAlign = 'center'; x.fillText('EVIDENCE · 증거 확인', 0, 8); x.textAlign = 'left';
+        x.restore();
+        pill(x, '특별 등급', 96, 128, null, '#5A4422', '#8A6B35');
+        x.fillStyle = '#3B2A16'; x.font = '800 62px ' + SERIF; x.fillText(T.title, 96, 238);
+        x.strokeStyle = '#B3261E'; x.lineWidth = 3; x.beginPath(); x.moveTo(96, 262); x.lineTo(W - 96, 262); x.stroke();
+      },
+      frame: function () {}
+    },
+    gold: {
+      ink: '#F6E7B8', sub: '#B59A5A', line: 'rgba(232,190,90,.35)', stamp: '#E4B94A', rank: '#FFD772', shape: 'arch',
+      bg: function (x, R) {
+        x.fillStyle = '#0B0906'; x.fillRect(0, 0, W, H);
+        x.save(); x.translate(W / 2, 470); x.fillStyle = 'rgba(232,190,90,.07)';
+        for (var i = 0; i < 28; i++) { x.rotate(Math.PI * 2 / 28); x.beginPath(); x.moveTo(0, 0); x.lineTo(-46, 1300); x.lineTo(46, 1300); x.closePath(); x.fill(); }
+        x.restore();
+        x.fillStyle = 'rgba(255,230,150,.8)'; for (var k = 0; k < 18; k++) sparkle(x, R() * W, R() * H, 6 + R() * 10);
+      },
+      card: function (x, T) {
+        x.fillStyle = '#15120C'; rr(x, 44, 44, W - 88, H - 88, 36); x.fill();
+        x.strokeStyle = goldGrad(x, 0, 0, W, H); x.lineWidth = 12; rr(x, 50, 50, W - 100, H - 100, 32); x.stroke();
+        x.lineWidth = 2; rr(x, 72, 72, W - 144, H - 144, 22); x.stroke();
+        pill(x, '★ 당첨 신분증', 96, 96, goldGrad(x, 96, 96, 330, 142), '#2A1E06', null);
+        x.fillStyle = goldGrad(x, 96, 150, 700, 230); x.font = '800 68px ' + SERIF; x.fillText(T.title, 96, 226);
+        // 왕관 + 별
+        var cx = W - 170, cy = 150; x.fillStyle = goldGrad(x, cx - 70, cy - 50, cx + 70, cy + 40);
+        x.beginPath(); x.moveTo(cx - 66, cy + 34); x.lineTo(cx - 72, cy - 28); x.lineTo(cx - 34, cy + 2); x.lineTo(cx, cy - 48); x.lineTo(cx + 34, cy + 2); x.lineTo(cx + 72, cy - 28); x.lineTo(cx + 66, cy + 34); x.closePath(); x.fill();
+        x.fillRect(cx - 66, cy + 40, 132, 12);
+        x.fillStyle = '#7A0E12'; [-36, 0, 36].forEach(function (d) { x.beginPath(); x.arc(cx + d, cy + 18, 7, 0, Math.PI * 2); x.fill(); });
+        x.strokeStyle = 'rgba(232,190,90,.4)'; x.lineWidth = 2; x.beginPath(); x.moveTo(96, 262); x.lineTo(W - 96, 262); x.stroke();
+      },
+      frame: function (x, clip, px, py, pw, ph) {
+        x.strokeStyle = goldGrad(x, px, py, px + pw, py + ph); x.lineWidth = 9; clip(); x.stroke();
+        x.fillStyle = goldGrad(x, px - 60, py, px + pw + 60, py + ph);
+        for (var lf = 0; lf < 8; lf++) {
+          var a = Math.PI * 0.62 + lf * 0.2;
+          [-1, 1].forEach(function (s) {
+            x.save(); x.translate(px + pw / 2 + s * Math.cos(a) * 190, py + ph / 2 + 30 + Math.sin(a) * 220); x.rotate(s * (a - 0.3)); x.beginPath(); x.ellipse(0, 0, 10, 24, 0, 0, Math.PI * 2); x.fill(); x.restore();
+          });
+        }
+      }
+    },
+    prism: {
+      ink: '#2A1E52', sub: '#6E6196', line: 'rgba(110,97,150,.25)', stamp: '#7A4CE0', rank: '#7A4CE0', shape: 'arch',
+      bg: function (x, R) {
+        x.fillStyle = '#140E2B'; x.fillRect(0, 0, W, H);
+        [['rgba(255,126,182,.45)', 160, 220], ['rgba(111,211,255,.40)', 920, 520], ['rgba(156,140,255,.45)', 300, 1150]].forEach(function (b) {
+          var g = x.createRadialGradient(b[1], b[2], 0, b[1], b[2], 520); g.addColorStop(0, b[0]); g.addColorStop(1, 'rgba(20,14,43,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+        });
+        x.fillStyle = 'rgba(255,255,255,.85)'; for (var k = 0; k < 22; k++) sparkle(x, R() * W, R() * H, 4 + R() * 9);
+      },
+      card: function (x, T, R) {
+        x.save(); rr(x, 44, 44, W - 88, H - 88, 40); x.clip();
+        var g = x.createLinearGradient(44, 44, W - 44, H - 44);
+        ['#FFD6EF', '#C9F1FF', '#E4D6FF', '#FFF0C6', '#D4FFEA', '#FFD6EF'].forEach(function (c, i, a) { g.addColorStop(i / (a.length - 1), c); });
+        x.fillStyle = g; x.fillRect(0, 0, W, H);
+        x.globalAlpha = 0.35; x.fillStyle = '#FFFFFF';
+        [[-200, 0], [260, 0], [620, 0]].forEach(function (s) { x.beginPath(); x.moveTo(s[0], H); x.lineTo(s[0] + 120, H); x.lineTo(s[0] + 920, 0); x.lineTo(s[0] + 800, 0); x.fill(); });
+        x.globalAlpha = 1; x.fillStyle = 'rgba(255,255,255,.9)'; for (var k = 0; k < 16; k++) sparkle(x, 60 + R() * (W - 120), 60 + R() * 200, 5 + R() * 8);
+        x.restore();
+        x.strokeStyle = rainbow(x, 0, 0, W, H); x.lineWidth = 6; rr(x, 47, 47, W - 94, H - 94, 38); x.stroke();
+        x.fillStyle = 'rgba(255,255,255,.80)'; rr(x, 76, 276, W - 152, H - 352, 28); x.fill();
+        pill(x, '★ 당첨 신분증', 96, 96, rainbow(x, 96, 96, 330, 142), '#2A1E52', null);
+        x.fillStyle = '#2A1E52'; x.font = '800 64px ' + SERIF; x.fillText(T.title, 96, 222);
+        // 프리즘
+        var cx = W - 180, cy = 150;
+        ['#FF7EB6', '#FFB86B', '#FFE66B', '#7EE8B0', '#6FD3FF', '#9C8CFF'].forEach(function (c, i) {
+          x.strokeStyle = c; x.lineWidth = 6; x.beginPath(); x.moveTo(cx + 18, cy + 4); x.lineTo(cx + 110, cy - 20 + i * 12); x.stroke();
+        });
+        x.strokeStyle = '#FFFFFF'; x.lineWidth = 5; x.beginPath(); x.moveTo(cx - 130, cy + 10); x.lineTo(cx - 20, cy - 2); x.stroke();
+        x.fillStyle = 'rgba(255,255,255,.75)'; x.strokeStyle = '#2A1E52'; x.lineWidth = 4;
+        x.beginPath(); x.moveTo(cx, cy - 56); x.lineTo(cx + 52, cy + 40); x.lineTo(cx - 52, cy + 40); x.closePath(); x.fill(); x.stroke();
+      },
+      frame: function (x, clip, px, py, pw, ph) { x.strokeStyle = rainbow(x, px, py, px + pw, py + ph); x.lineWidth = 9; clip(); x.stroke(); }
+    }
+  };
+
+  /* 신분증 그리기: photo = 이미지/캔버스(없으면 빈 사진 칸), nick = 별명 */
+  function draw(cv, info, photo, nick) {
+    var T = info.theme, K = DECO[T.key];
+    cv.width = W; cv.height = H;
+    var x = cv.getContext('2d'); x.textAlign = 'left';
+    var R = rng(parseInt(info.no.slice(1), 10) * 97 + info.no.charCodeAt(0));
+    K.bg(x, R);
+    K.card(x, T, R);
+
+    // 사진
+    var tilt = K.shape === 'polaroid', px = 96, py = tilt ? 300 : 290, pw = 320, ph = tilt ? 350 : 390;
+    var clip = function () {
+      if (K.shape === 'arch') { x.beginPath(); x.moveTo(px, py + ph); x.lineTo(px, py + pw / 2); x.arc(px + pw / 2, py + pw / 2, pw / 2, Math.PI, 0); x.lineTo(px + pw, py + ph); x.closePath(); }
+      else { x.beginPath(); x.rect(px, py, pw, ph); }
+    };
+    x.save();
+    if (tilt) {
+      x.translate(px + pw / 2, py + ph / 2); x.rotate(-0.04); x.translate(-(px + pw / 2), -(py + ph / 2));
+      x.save(); x.shadowColor = 'rgba(0,0,0,.25)'; x.shadowBlur = 16; x.shadowOffsetY = 6; x.fillStyle = '#FFFFFF'; x.fillRect(px - 18, py - 18, pw + 36, ph + 66); x.restore();
+    }
+    x.save(); clip(); x.clip();
+    x.fillStyle = K.shape === 'arch' && T.key === 'gold' ? '#2A2416' : '#DDD3BD'; x.fillRect(px, py, pw, ph);
+    if (photo && (photo.width || photo.naturalWidth)) {
+      var sw = photo.naturalWidth || photo.width, sh = photo.naturalHeight || photo.height;
+      var s = Math.max(pw / sw, ph / sh), dw = sw * s, dh = sh * s;
+      x.drawImage(photo, px + (pw - dw) / 2, py + (ph - dh) / 2, dw, dh);
+    } else {
+      x.fillStyle = T.key === 'gold' ? '#4A3F26' : 'rgba(90,80,60,.35)';
+      x.beginPath(); x.arc(px + pw / 2, py + 170, 64, 0, Math.PI * 2); x.fill();
+      x.beginPath(); x.ellipse(px + pw / 2, py + ph + 20, 130, 150, 0, Math.PI, 0); x.fill();
+      x.fillStyle = T.key === 'gold' ? '#B59A5A' : '#FFFFFF'; x.font = '700 26px ' + FONT; x.textAlign = 'center'; x.fillText('사진', px + pw / 2, py + 180); x.textAlign = 'left';
+    }
+    x.restore();
+    if (tilt) {
+      x.fillStyle = '#5A4422'; x.font = '700 22px ' + FONT; x.textAlign = 'center'; x.fillText('사건 담당 요원', px + pw / 2, py + ph + 36); x.textAlign = 'left';
+      // 클립
+      x.strokeStyle = '#9EA4AE'; x.lineWidth = 7; x.lineCap = 'round';
+      x.beginPath(); x.moveTo(px + 230, py + 56); x.lineTo(px + 230, py - 14); x.arc(px + 250, py - 14, 20, Math.PI, 0); x.lineTo(px + 270, py + 44); x.arc(px + 256, py + 44, 14, 0, Math.PI); x.lineTo(px + 242, py - 4); x.stroke();
+    }
+    x.restore();
+    K.frame(x, clip, px, py, pw, ph);
+
+    // 정보
+    var ix = 470;
+    var field = function (label, value, y, big, color) {
+      x.fillStyle = K.sub; x.font = '700 25px ' + FONT; x.fillText(label, ix, y);
+      x.fillStyle = color || K.ink; x.font = '800 ' + big + 'px ' + FONT;
+      x.fillText(wrap(x, value, W - ix - 110, 1)[0], ix, y + big + 6);
+    };
+    field('이름', nick || '익명 탐정', 322, 50);
+    field('칭호', info.rank, 432, 40, K.rank);
+    field('번호 · 난이도', info.no.charAt(0) + '-' + info.no.slice(1) + ' · ' + info.level, 532, 34);
+    field('발급일', '2026.' + info.md.slice(0, 2) + '.' + info.md.slice(2), 620, 34);
+    // 도장
+    x.save(); x.translate(W - 196, 610); x.rotate(-0.22); x.globalAlpha = 0.88; x.strokeStyle = K.stamp; x.fillStyle = K.stamp;
+    if (T.key === 'file') {
+      x.lineWidth = 6; x.strokeRect(-92, -46, 184, 92); x.lineWidth = 2; x.strokeRect(-82, -36, 164, 72);
+      x.font = '800 42px ' + FONT; x.textAlign = 'center'; x.fillText('사건 해결', 0, 15);
+    } else {
+      x.lineWidth = 6; x.beginPath(); x.arc(0, 0, 74, 0, Math.PI * 2); x.stroke(); x.lineWidth = 2; x.beginPath(); x.arc(0, 0, 62, 0, Math.PI * 2); x.stroke();
+      x.font = '800 34px ' + FONT; x.textAlign = 'center';
+      if (T.grade === 'rare') { x.font = '800 46px ' + FONT; x.fillText('당첨', 0, 16); } else { x.fillText('사건', 0, -4); x.fillText('해결', 0, 34); }
+    }
+    x.restore(); x.textAlign = 'left';
+
+    x.strokeStyle = K.line; x.lineWidth = 3; if (T.key === 'file') x.setLineDash([14, 10]);
+    x.beginPath(); x.moveTo(96, 726); x.lineTo(W - 96, 726); x.stroke(); x.setLineDash([]);
+
+    var y = 774;
+    info.rows.forEach(function (row) {
+      x.fillStyle = BADGE[row.b]; x.beginPath(); x.arc(126, y + 8, 30, 0, Math.PI * 2); x.fill();
+      x.fillStyle = '#FFFFFF'; x.font = '800 32px ' + FONT; x.textAlign = 'center'; x.fillText(row.b, 126, y + 19); x.textAlign = 'left';
+      x.fillStyle = K.sub; x.font = '700 25px ' + FONT; x.fillText(row.label, 182, y + 2);
+      x.fillStyle = K.ink; x.font = '500 29px ' + FONT;
+      var lines = wrap(x, row.text, W - 182 - 110, 3);
+      lines.forEach(function (l, i) { x.fillText(l, 182, y + 42 + i * 38); });
+      y += 42 + lines.length * 38 + 26;
+    });
+
+    x.textAlign = 'center';
+    x.fillStyle = K.ink; x.font = '800 32px ' + FONT; x.fillText('AI와 함께 생각하고, 판단은 스스로', W / 2, H - 124);
+    x.fillStyle = K.sub; x.font = '600 23px ' + FONT; x.fillText('2026 부산교육한마당 · 동수영중학교 연구학교관 · ' + info.caseTitle, W / 2, H - 90);
+    x.textAlign = 'left';
+  }
+
+  return { CASES: CASES, LEVELS: LEVELS, THEMES: THEMES, GRADE_NAME: GRADE_NAME, QB: QB, QC: QC, CIRC: CIRC, DEC: DEC, DEC_FB: DEC_FB,
+    themeOf: themeOf, encode: encode, decode: decode, card: card, draw: draw };
+})();
+</script>
+<script>
+/* ===== 휴대폰 신분증 페이지: QR의 결과 코드 + 내 셀카 → 신분증 이미지 ===== */
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  window.addEventListener('hashchange', function () { location.reload(); });
+  var r = QHC.decode(location.hash);
+  if (!r) { $('bad').hidden = false; return; }
+  var info = QHC.card(r), photo = null, timer = null;
+  $('ok').hidden = false;
+  $('theme').innerHTML = '등급: <b>' + info.gradeName + '</b> · 디자인: <b>' + info.theme.name + '</b>' + (info.grade === 'rare' ? ' <span class="rare">당첨!</span>' : '') + '<br>같이 온 친구는 어떤 신분증이 나왔나요?';
+  var framed = false; try { framed = window.self !== window.top; } catch (e) { framed = true; }
+  if (!framed) $('dl').hidden = false;
+
+  function redraw() {
+    QHC.draw($('cv'), info, photo, $('nick').value.trim());
+    $('final').src = $('cv').toDataURL('image/png');
+  }
+  $('nick').addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(redraw, 250); });
+  $('file').addEventListener('change', function () {
+    var f = this.files && this.files[0]; if (!f) return;
+    var url = URL.createObjectURL(f), img = new Image();
+    img.onload = function () {
+      var s = Math.min(1, 900 / Math.max(img.naturalWidth, img.naturalHeight));
+      var c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * s); c.height = Math.round(img.naturalHeight * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url); photo = c;
+      $('shotLabel').textContent = '다시 찍기'; $('clearPhoto').hidden = false; redraw();
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); alertBox('사진을 불러오지 못했어요. 다시 찍어 주세요.'); };
+    img.src = url; this.value = '';
+  });
+  $('clearPhoto').addEventListener('click', function () { photo = null; $('shotLabel').textContent = '셀카 찍기'; this.hidden = true; redraw(); });
+  $('dl').addEventListener('click', function () {
+    var a = document.createElement('a'); a.href = $('cv').toDataURL('image/png'); a.download = '탐정신분증_' + r.no + '.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+  function alertBox(t) { $('saveHint').textContent = t; }
+  redraw();
+})();
+</script>
+</body></html>
