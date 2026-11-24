@@ -277,6 +277,127 @@ footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-s
   .work{padding:16px 20px}
   .done{grid-template-columns:minmax(0,388px) minmax(0,1fr)}
 }
+
+/* ===================== v3: 큰 그림·짧은 글 (1366×768 서서 보기 기준) ===================== */
+body{font-size:20px}
+.brand b{font-size:1.15rem}
+.steps li{font-size:1rem;padding:6px 16px 6px 7px}
+.steps li i{width:28px;height:28px;font-size:.9rem}
+.play{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(0,1fr);gap:18px;align-items:start}
+.stagel{display:flex;flex-direction:column;gap:8px;min-width:0}
+.casehead{display:flex;align-items:center;gap:12px}
+.casehead h2{font-size:1.65rem;margin:0}
+.lvchip{font-weight:900;font-size:.95rem;padding:4px 12px;border-radius:999px;color:#fff;flex:none}
+.lvchip.lv0{background:var(--c)} .lvchip.lv1{background:var(--q)} .lvchip.lv2{background:var(--h-bg)}
+.scenebox{position:relative;border-radius:18px;overflow:hidden;border:3px solid var(--line);background:#fff;line-height:0}
+.scenebox .scene{margin:0;border:0;border-radius:0}
+.scenebox .scene svg{width:100%;height:auto;display:block;max-height:none}
+.intro{margin:0;font-size:1.3rem;font-weight:700;line-height:1.4}
+.findtip{margin:0;font-size:1.2rem;line-height:1.4;padding:10px 14px;border-radius:12px;background:var(--q-soft)}
+.findtip b{display:inline-flex;align-items:center;gap:8px}
+.findtip svg{width:26px;height:26px;color:var(--q);flex:none}
+.findtip.bad{background:var(--bad-soft)}
+.findtip.good{background:var(--c-soft)}
+.mode-find{border-color:var(--q);box-shadow:0 0 0 4px rgba(47,91,211,.18)}
+.hot{position:absolute;border:4px dashed rgba(23,33,58,.55);border-radius:14px;background:rgba(255,255,255,.08);cursor:pointer;padding:0;margin:0}
+.hot:hover{background:rgba(47,91,211,.14);border-color:var(--q)}
+.hot.no{border-style:solid;border-color:var(--bad);background:rgba(191,58,47,.14)}
+.hot.ok{border:6px solid var(--c);background:rgba(28,128,90,.16)}
+.hot.hint{border:5px solid var(--gold);background:rgba(242,181,68,.25)}
+.mode-found .hot:not(.ok){display:none}
+@media (prefers-reduced-motion:no-preference){
+  .mode-find .hot:not(.no){animation:hotPulse 1.6s ease-in-out infinite}
+  .hot.hint{animation:hintGlow .9s ease-in-out infinite alternate}
+  @keyframes hotPulse{50%{border-color:rgba(47,91,211,.95)}}
+  @keyframes hintGlow{from{box-shadow:0 0 0 0 rgba(242,181,68,.0)}to{box-shadow:0 0 0 10px rgba(242,181,68,.55)}}
+}
+.side{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+h3.ask{margin:0;font-size:1.45rem;font-weight:900;display:flex;align-items:center;gap:10px;line-height:1.25}
+.badge{width:40px;height:40px;font-size:1.2rem}
+.bigqs{display:grid;gap:12px}
+.bigq{display:flex;align-items:center;gap:16px;text-align:left;cursor:pointer;background:var(--surface);border:3px solid var(--line);border-radius:16px;padding:16px 18px;min-height:110px;width:100%}
+.bigq:hover{border-color:var(--q);background:var(--q-soft)}
+.bigq .ico{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--q);color:#fff}
+.bigq .ico svg{width:34px;height:34px}
+.bq{display:flex;flex-direction:column;gap:4px;min-width:0}
+.bq b{font-size:1.35rem;line-height:1.3}
+.bq small{font-size:1rem;color:var(--muted);font-weight:700}
+.chat{display:grid;gap:10px}
+.msg{font-size:1.15rem}
+.msg.me{background:var(--q-soft);font-weight:700}
+.msg .say{margin:2px 0 0;font-size:1.35rem;font-weight:800;line-height:1.4}
+.aihead{display:flex;align-items:center;gap:8px;font-size:1rem;color:var(--muted)}
+.aihead b{color:var(--ink)}
+.aihead .ava{width:26px;height:26px}
+.aihead .ava::after{left:6px;top:6px;width:10px;height:10px;border-width:3px}
+.nudge{display:flex;flex-direction:column;gap:2px;background:var(--h-soft);border-radius:14px;padding:12px 16px}
+.nudge b{font-size:1.2rem}
+.go.big{min-height:64px;font-size:1.25rem;padding:12px 26px}
+.go.big svg{width:26px;height:26px}
+.ghost{min-height:56px}
+.toast{margin:0;background:var(--c-soft);border-radius:12px;padding:8px 14px;font-weight:700;font-size:1.05rem}
+.hsteps{list-style:none;margin:0;padding:0;display:flex;gap:8px;flex-wrap:wrap}
+.hsteps li{display:flex;align-items:center;gap:8px;padding:5px 14px 5px 6px;border-radius:999px;background:var(--sunk);color:var(--muted);font-weight:800;font-size:1rem}
+.hsteps li i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--muted)}
+.hsteps li.now{background:var(--h-soft);color:var(--h)} .hsteps li.now i{background:var(--h-bg);color:#fff}
+.hsteps li.done{color:var(--c)} .hsteps li.done i{background:var(--c);color:#fff}
+.claims{display:grid;gap:10px}
+.claim{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:start;text-align:left;cursor:pointer;background:var(--surface);border:3px solid var(--line);border-radius:16px;padding:14px 16px;width:100%;min-height:76px}
+.claim:hover:not(:disabled){border-color:var(--ink)}
+.claim:disabled{cursor:default}
+.cn{font-size:1.6rem;font-weight:900;line-height:1.1;color:var(--muted)}
+.ct{display:flex;flex-direction:column;gap:6px;font-size:1.3rem;font-weight:800;line-height:1.35;min-width:0}
+.claim.ok{border-color:var(--c);background:var(--c-soft)}
+.claim.dep{border-color:#C9CFDA;background:var(--sunk);color:var(--muted)}
+.claim.sus{border-color:var(--h-bg);background:var(--h-soft)}
+.claim.lie{border-color:var(--bad);background:var(--bad-soft)}
+.claim.lie .ct{text-decoration:line-through;text-decoration-color:rgba(191,58,47,.6);text-decoration-thickness:3px}
+.why{font-size:1rem;font-weight:700;color:var(--muted);text-decoration:none}
+.claim.ok .why{color:var(--c)}
+.ctag{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;font-size:1rem;font-weight:900;padding:3px 12px;border-radius:999px}
+.ctag svg{width:20px;height:20px}
+.ctag.sus{background:var(--h-bg);color:#fff}
+.stamp{position:absolute;right:14px;top:50%;transform:translateY(-50%) rotate(-10deg);border:4px solid var(--bad);color:var(--bad);font-weight:900;font-size:1.5rem;padding:2px 12px;border-radius:10px;background:rgba(255,255,255,.85);text-decoration:none}
+.hintline{margin:0;color:var(--muted);font-weight:700;font-size:1.05rem}
+.explain{background:var(--c-soft);border-radius:14px;padding:12px 16px}
+.explain b{font-size:1.3rem;line-height:1.4}
+.cwrap{display:flex;flex-direction:column;gap:14px;max-width:1180px;margin:0 auto}
+.ctitle{font-size:2rem;margin:0;justify-content:center}
+.recap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.rc{display:flex;flex-direction:column;gap:4px;border-radius:14px;padding:10px 14px;font-size:1.1rem;font-weight:700;line-height:1.35;border:3px solid transparent}
+.rc .rl{font-size:.95rem;font-weight:900}
+.rc.ok{background:var(--c-soft)} .rc.ok .rl{color:var(--c)}
+.rc.lie{background:var(--bad-soft);border-color:var(--bad)} .rc.lie .rl{color:var(--bad)}
+.rc.dep{background:var(--sunk);color:var(--muted)}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.choice{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;cursor:pointer;background:var(--surface);border:3px solid var(--line);border-radius:20px;padding:20px 16px;min-height:250px;width:100%}
+.choice:hover:not(:disabled){border-color:var(--ink);transform:translateY(-2px)}
+.choice .ico{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.choice .ico svg{width:46px;height:46px}
+.choice.ch0 .ico{background:#6B7A99} .choice.ch1 .ico{background:var(--c)} .choice.ch2 .ico{background:var(--bad)}
+.choice b{font-size:1.6rem;font-weight:900}
+.choice small{font-size:1.05rem;color:var(--muted);line-height:1.4}
+.choice.tried{opacity:.85;background:var(--bad-soft);border-color:var(--bad);cursor:default}
+.choice .fb{font-size:1.05rem;font-weight:800;color:var(--bad);line-height:1.4}
+.fixchat{display:grid;gap:10px;max-width:900px;width:100%;margin:0 auto}
+.fixchat .msg{max-width:100%}
+.cwrap .row{justify-content:center}
+.level .lvname{font-size:2rem}
+.level .lvhow{font-size:1.15rem}
+.level .lvsub{font-size:1rem}
+.level .cta{font-size:1.1rem;padding:11px 22px}
+.today{font-size:1.1rem}
+.donehead h2{font-size:1.6rem}
+.qrtext{font-size:1.05rem}
+.staff{font-size:1rem}
+@media (max-height:820px) and (min-width:901px){
+  .play{grid-template-columns:minmax(0,1.38fr) minmax(0,1fr)}
+  .intro{font-size:1.2rem}
+  .claim{padding:11px 14px;min-height:68px}
+  .ct{font-size:1.22rem}
+  .bigq{min-height:100px}
+}
+@media (max-width:900px){.play{grid-template-columns:minmax(0,1fr)}.recap,.choices{grid-template-columns:minmax(0,1fr)}.choice{min-height:0}}
 </style></head><body>
 <div class="app">
   <header class="top">
@@ -330,7 +451,7 @@ footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-s
 var QHC = (function () {
   'use strict';
   var CIRC = ['①', '②', '③'];
-  var QB = '그렇게 판단한 근거를 하나씩 알려 줘.';
+  var QB = '근거도 함께 알려 줘.';
   var QC = '증거 4개와 네 결론이 서로 맞는지 확인해 줘.';
   var LEVELS = [
     { id: 'e', name: '초등', how: '그림 속 증거 찾기' },
@@ -338,81 +459,83 @@ var QHC = (function () {
     { id: 'h', name: '고등', how: '추론의 함정 찾기' }
   ];
 
+  /* 사건 데이터 v3: 글은 짧게, 증거는 그림 속 위치(hot: 640×400 좌표 [x, y, w, h])로 찾는다 */
   var CASES = [
     { // 0 초등
       id: 'lettuce', lv: 0, title: '텃밭 상추 실종 사건',
-      intro: '학교 텃밭의 상추 잎이 하룻밤 사이에 많이 사라졌어요. AI 탐정이 범인을 찾았다고 해요.',
+      intro: '텃밭 상추가 하룻밤 새 사라졌어요!',
       ev: [
-        { tag: '그물망', text: '상추 위에 촘촘한 그물망이 덮여 있고, 찢어진 곳은 없어요.' },
-        { tag: '흙', text: '그물망 가장자리 아래 흙이 파여 작은 굴이 생겼어요.' },
-        { tag: '잎', text: '땅에서 가까운 아래쪽 잎부터 잘려 있어요.' },
-        { tag: '사육장', text: "옆 사육장 토끼 '당근이'가 어젯밤 밖에 나왔다가 아침에 돌아왔어요." }
+        { tag: '그물망', text: '그물망에 찢어진 곳이 없어요', hot: [26, 214, 424, 168] },
+        { tag: '굴', text: '그물 아래 흙에 굴이 파였어요', hot: [352, 322, 200, 74] },
+        { tag: '잎', text: '아래쪽 잎부터 잘렸어요', hot: [48, 252, 384, 104] },
+        { tag: '사육장', text: '토끼 당근이가 밤에 밖에 나왔어요', hot: [452, 130, 186, 196] }
       ],
-      qa: '범인이 누구야?', short: '범인은 새입니다.',
-      sents: ['새들은 채소 잎을 좋아합니다.', '새가 하늘에서 날아 내려와 상추 잎을 쪼아 먹었습니다.', '그러니 텃밭에 허수아비를 세우면 됩니다.'],
+      order: [0, 2, 1, 3],
+      qa: '범인이 누구야?', short: '범인은 새예요.',
+      sents: ['상추는 동물이 먹은 거예요.', '새가 하늘에서 날아와 쪼아 먹었어요.', '그러니 허수아비를 세우면 돼요.'],
       wrong: 1, evOk: [0, 2],
-      sentHint: ['①은 일반적인 이야기예요. 그림의 증거와 부딪히는 문장을 찾아보세요.', '', '③은 ②가 맞다고 믿고 한 말이에요. 출발점이 된 문장을 찾아보세요.'],
-      evHint: ['', '이 증거는 다른 범인을 가리켜요. ②의 "하늘에서 날아 내려와"와 부딪히는 증거를 찾아보세요.', '', '이 증거는 다른 범인을 가리켜요. ②의 "하늘에서 날아 내려와"와 부딪히는 증거를 찾아보세요.'],
-      explain: '그물망이 찢어진 곳 없이 덮여 있으니 새는 위에서 들어올 수 없어요. 잎도 땅에서 가까운 쪽부터 잘렸지요.',
-      aiGood: 'AI는 상추가 동물에게 먹혔다는 것까지는 맞게 짚었어요. 범인을 고를 때 증거 #1을 놓쳤을 뿐이에요.',
-      aiFix: '지적 고마워요! 그물망이 멀쩡하니 새는 들어올 수 없었네요. 굴과 발자국을 보면 토끼 당근이가 그물 아래로 들어왔을 가능성이 커요. 사육장 문부터 점검해 볼까요?',
+      sentHint: ['맞는 말이에요. 잎이 뜯긴 건 사실이에요.', '', '②가 맞다고 믿고 한 말이에요. 출발점이 된 말을 골라요.'],
+      evHint: ['', '이건 다른 범인을 알려 주는 단서예요. 새가 위에서 들어올 수 없다는 증거를 찾아요.', '', '이건 다른 범인을 알려 주는 단서예요. 새가 위에서 들어올 수 없다는 증거를 찾아요.'],
+      explain: '그물망이 멀쩡해요. 새는 위에서 들어올 수 없어요!',
+      aiFix: '맞아요, 그물망이 멀쩡하니 새는 아니에요. 그물 아래 굴과 발자국을 보면 토끼 당근이가 들어온 것 같아요.',
       concl: [
-        { t: '토끼가 그물 아래 굴로 들어와 먹었다', k: 'good', fb: '증거 #2·#3·#4와 모두 맞는 판단이에요!' },
-        { t: '새가 그물을 뚫고 들어와 먹었다', k: 'bad', fb: '증거 #1을 다시 보세요. 그물망에는 찢어진 곳이 없어요.' },
-        { t: '아직 정할 수 없다. 증거를 더 모아야 한다', k: 'ok', fb: '좋아요. 서두르지 않는 것도 좋은 탐정의 자세예요.' }
+        { t: '토끼가 그물 아래 굴로 들어와 먹었다', k: 'good', fb: '' },
+        { t: '새가 그물을 뚫고 들어와 먹었다', k: 'bad', fb: '' },
+        { t: '아직 정할 수 없다', k: 'ok', fb: '' }
       ]
     },
     { // 1 중등
       id: 'library', lv: 1, title: '도서관 연체 사건',
-      intro: '도서관 AI가 민지에게 "책을 늦게 반납했으니 일주일 동안 대출할 수 없다"고 알렸어요. 정말 늦었을까요?',
+      intro: '도서관 AI가 민지에게 “연체라서 대출 정지”라고 알렸어요.',
       ev: [
-        { tag: '대출증', text: '민지는 11월 3일에 책을 빌렸다.' },
-        { tag: '대출 규칙', text: '책은 빌린 날부터 14일 동안 빌릴 수 있다.' },
-        { tag: '반납 기록', text: '민지는 11월 15일에 책을 반납했다.' },
-        { tag: '연체 규칙', text: '반납 기한이 지나서 돌려주면 일주일 동안 대출이 정지된다.' }
+        { tag: '대출증', text: '11월 3일에 빌렸어요', hot: [212, 236, 180, 126] },
+        { tag: '대출 규칙', text: '빌린 날부터 14일 동안 빌릴 수 있어요', hot: [232, 26, 196, 168] },
+        { tag: '반납 확인', text: '11월 15일에 반납했어요', hot: [384, 236, 118, 130] },
+        { tag: '연체 규칙', text: '기한이 지나면 7일 대출 정지', hot: [504, 240, 132, 122] }
       ],
-      qa: '민지는 연체했어?', short: '네, 민지는 연체했습니다.',
-      sents: ['민지는 11월 3일에 책을 빌렸습니다.', '반납 기한은 빌린 날부터 일주일 뒤인 11월 10일입니다.', '따라서 11월 15일에 반납한 민지는 연체이므로 대출이 정지됩니다.'],
+      order: [0, 1, 2, 3],
+      qa: '민지는 연체했어?', short: '네, 연체예요.',
+      sents: ['민지는 11월 3일에 빌렸어요.', '반납 기한은 일주일 뒤인 11월 10일이에요.', '11월 15일에 반납했으니 연체예요.'],
       wrong: 1, evOk: [1],
-      sentHint: ['①은 대출증(증거 #1)과 같아요. 맞는 문장이에요.', '', '③은 ②의 기한을 믿고 내린 결론이에요. 출발점 문장을 찾아보세요.'],
-      evHint: ['대출증은 ①과 같아요. ②의 "일주일 뒤"가 맞는지 확인할 규칙을 찾아보세요.', '', '반납 기록은 ③과 관련 있어요. ②의 기한을 정하는 증거를 찾아보세요.', '연체 규칙은 기한이 지난 뒤의 일이에요. 기한 자체를 정하는 규칙을 찾아보세요.'],
-      explain: '대출 기간은 14일이라 기한은 11월 17일이에요. 11월 15일 반납은 기한 안이에요. AI가 규칙을 잘못 적용했어요.',
-      aiGood: 'AI는 빌린 날(문장 ①)을 정확히 읽었어요. 규칙을 적용하는 계산에서 실수했을 뿐이에요.',
-      aiFix: '제가 대출 기간을 일주일로 잘못 계산했어요. 기한은 11월 17일이라 민지는 연체가 아니에요. 대출 정지 안내를 취소하고 민지에게 다시 알릴게요.',
+      sentHint: ['맞는 말이에요. 대출증과 같아요.', '', '②의 기한을 믿고 한 말이에요. 출발점이 된 말을 골라요.'],
+      evHint: ['대출증은 ①과 같아요. 기한을 정하는 규칙을 찾아요.', '', '반납 날짜는 맞아요. 기한을 정하는 규칙을 찾아요.', '연체가 된 다음의 규칙이에요. 기한을 정하는 규칙을 찾아요.'],
+      explain: '대출 기간은 14일! 기한은 11월 17일이라 연체가 아니에요.',
+      aiFix: '제가 대출 기간을 7일로 잘못 계산했어요. 기한은 11월 17일이라 민지는 연체가 아니에요. 대출 정지를 취소할게요.',
       concl: [
-        { t: '기한(11월 17일) 안에 반납했으니 연체가 아니다', k: 'good', fb: '규칙을 정확히 적용한 판단이에요!' },
-        { t: '11월 10일이 지났으니 연체다', k: 'bad', fb: '증거 #2를 다시 보세요. 대출 기간은 14일이에요.' },
-        { t: '반납 날짜를 몰라서 판단할 수 없다', k: 'bad', fb: '증거 #3에 반납 날짜가 있어요.' }
+        { t: '기한(11월 17일) 안에 반납했으니 연체가 아니다', k: 'good', fb: '' },
+        { t: '11월 10일이 지났으니 연체다', k: 'bad', fb: '' },
+        { t: '판단할 수 없다', k: 'bad', fb: '' }
       ]
     },
     { // 2 고등
       id: 'detector', lv: 2, title: 'AI 탐지기 경고 사건',
-      intro: '학교가 독서 감상문 1,000편을 AI 글 탐지기로 검사했어요. 민수의 글에 "AI 작성 의심" 경고가 뜨자, AI 조수가 민수를 부정행위로 판단했습니다.',
+      intro: '감상문 1,000편을 AI 탐지기로 검사했더니 민수 글에 경고가 떴어요.',
       ev: [
-        { tag: '탐지기 안내서', text: '실제로 AI로 쓴 글은 95%를 찾아낸다.' },
-        { tag: '오경보 기록', text: '사람이 직접 쓴 글도 5%는 "AI 작성 의심"으로 잘못 표시된다.' },
-        { tag: '검사 결과', text: 'AI로 쓴 글 20편 중 19편, 직접 쓴 글 980편 중 49편에 경고가 떴다. 경고는 모두 68편이다.' },
-        { tag: '편집 기록', text: '민수의 문서에는 11월 2일 초안부터 세 번 고친 기록이 남아 있다.' }
+        { tag: '탐지기 안내서', text: 'AI로 쓴 글의 95%를 찾아내요', hot: [330, 10, 148, 104] },
+        { tag: '오경보 기록', text: '사람이 쓴 글도 5%는 잘못 경고해요', hot: [480, 10, 150, 104] },
+        { tag: '검사 결과', text: '경고 68편 중 진짜 AI 글은 19편', hot: [8, 236, 624, 156] },
+        { tag: '편집 기록', text: '민수는 초안부터 세 번 고쳤어요', hot: [330, 116, 300, 104] }
       ],
-      qa: '민수는 AI로 감상문을 썼어?', short: '네, 95% 확률로 AI로 쓴 글입니다.',
-      sents: ['이 탐지기는 실제로 AI로 쓴 글의 95%를 찾아낼 만큼 정확합니다.', '따라서 경고가 뜬 민수의 글이 AI로 쓴 글일 확률은 95%입니다.', '그러니 민수를 부정행위로 처리해야 합니다.'],
+      order: [2, 0, 1, 3],
+      qa: '민수는 AI로 썼어?', short: '네, 95% 확률로 AI 글이에요.',
+      sents: ['탐지기는 AI 글의 95%를 찾아내요.', '그러니 경고 뜬 민수 글이 AI 글일 확률도 95%예요.', '민수를 부정행위로 처리해야 해요.'],
       wrong: 1, evOk: [1, 2],
-      sentHint: ['①은 안내서(증거 #1)와 같은 사실이에요. 사실에서 결론으로 건너뛰는 곳을 찾아보세요.', '', '③은 ②를 믿고 내린 처분이에요. 출발점 문장을 찾아보세요.'],
-      evHint: ['안내서는 ①과 같은 내용이에요. ②는 이 95%를 다른 뜻으로 바꿔 썼어요. 그 차이를 보여 주는 증거를 찾아보세요.', '', '', '편집 기록은 민수에게 유리한 단서예요. 그런데 ②의 "95%"가 왜 틀렸는지 숫자로 보여 주는 증거를 찾아보세요.'],
-      explain: '경고가 뜬 68편 중 실제 AI 글은 19편뿐이라, 경고 뜬 글이 AI 글일 확률은 약 28%예요. "AI 글을 잡아낼 확률 95%"와 "경고 뜬 글이 AI 글일 확률"은 다른 질문이에요. 이것을 기저율 무시라고 해요.',
-      aiGood: 'AI는 탐지기 성능(문장 ①)을 정확히 읽었어요. 그 95%를 "경고 뜬 글이 AI 글일 확률"로 바꿔 읽을 때 실수했을 뿐이에요.',
-      aiFix: '지적 고마워요. 경고가 뜬 68편 중 실제 AI 글은 19편이라 확률은 약 28%예요. 경고만으로 처리하지 말고, 민수의 편집 기록을 확인하고 이야기를 먼저 들어 보는 게 맞겠어요.',
+      sentHint: ['맞는 말이에요. 안내서에 적힌 사실이에요.', '', '②를 믿고 내린 처분이에요. 출발점이 된 말을 골라요.'],
+      evHint: ['안내서는 ①과 같은 말이에요. 경고 뜬 글이 실제로 몇 편이 AI 글인지 보여 주는 증거를 찾아요.', '', '', '민수에게 유리한 단서예요. 그런데 95%가 왜 틀렸는지는 숫자로 보여 줘야 해요.'],
+      explain: '경고 뜬 68편 중 진짜 AI 글은 19편뿐! 확률은 약 28%예요.',
+      aiFix: '맞아요. 경고 뜬 68편 중 AI 글은 19편이라 약 28%예요. 경고만 보고 처리하지 말고, 편집 기록을 보고 민수 이야기부터 들을게요.',
       concl: [
-        { t: '경고만으로는 판단할 수 없다. 편집 기록을 확인하고 민수와 먼저 이야기해야 한다', k: 'good', fb: '숫자와 다른 증거를 함께 본 신중한 판단이에요!' },
-        { t: '탐지기가 95% 정확하니 부정행위로 처리한다', k: 'bad', fb: '증거 #2와 #3을 다시 보세요. 경고가 뜬 68편 중 실제 AI 글은 19편뿐이에요.' },
-        { t: '탐지기는 믿을 수 없으니 앞으로 쓰지 않는다', k: 'bad', fb: '탐지기는 실제 AI 글의 95%를 찾아내요. 버리기보다 경고를 "확인이 필요한 글"로 쓰면 돼요.' }
+        { t: '경고만으로는 판단할 수 없다. 편집 기록을 확인하고 민수와 먼저 이야기한다', k: 'good', fb: '' },
+        { t: '탐지기가 95% 정확하니 부정행위로 처리한다', k: 'bad', fb: '' },
+        { t: '탐지기는 믿을 수 없으니 쓰지 않는다', k: 'bad', fb: '' }
       ]
     }
   ];
 
-  var DEC = ['AI의 답을 그대로 믿는다', '맞는 부분은 살리고, 틀린 부분은 AI에게 고쳐 달라고 한다', 'AI의 답은 모두 버리고 혼자 해결한다'];
-  var DEC_FB = ['틀린 문장이 있었어요. 확인 없이 그대로 믿으면 잘못된 결론을 낼 수 있어요.', '', 'AI는 맞게 정리한 부분도 있었어요. 다 버리기보다 확인하고 고쳐 쓰면 더 빠르고 정확해요.'];
-  var DEC_PAST = ['AI의 답을 그대로 믿었어요.', '맞는 부분은 살리고, 틀린 부분은 AI와 함께 고쳤어요.', 'AI의 답을 버리고 혼자 해결했어요.'];
+  var DEC = ['그대로 믿어요', '틀린 곳만 고쳐서 써요', '전부 버려요'];
+  var DEC_SUB = ['AI가 한 말을 그대로 써요', '맞는 말은 살리고 틀린 말은 AI에게 고쳐 달라고 해요', 'AI의 답은 쓰지 않고 혼자 다시 해요'];
+  var DEC_FB = ['잠깐! ②가 틀렸는데 그대로 믿으면 엉뚱한 결론이 나요.', '', '잠깐! ①은 맞는 말이었어요. 다 버리면 맞는 정보까지 잃어요.'];
+  var DEC_PAST = ['처음엔 그대로 믿으려다, 다시 생각해 틀린 곳을 AI와 함께 고쳤어요.', '맞는 말은 살리고, 틀린 말은 AI와 함께 고쳤어요.', '처음엔 다 버리려다, 맞는 말은 살려 AI와 함께 고쳤어요.'];
 
   /* ---------- 신분증 디자인: 특별 2종 + 희귀 2종 ---------- */
   var THEMES = [
@@ -442,13 +565,13 @@ var QHC = (function () {
   }
   function card(r) {
     var c = CASES[r.ci], T = THEMES[r.th];
-    var q = r.q1 === 0 ? '“' + c.qa + '” → 결론만 돌아와 근거를 다시 물었어요.' : '“' + (r.q1 === 1 ? QB : QC) + '”';
+    var q = r.q1 === 0 ? '“' + c.qa + '” → 답만 돌아와 근거를 다시 물었어요.' : '“' + (r.q1 === 1 ? c.qa + ' ' + QB : QC) + '”';
     return {
       theme: T, grade: T.grade, gradeName: GRADE_NAME[T.grade], rank: rankOf(r), no: r.no, md: r.md,
       level: LEVELS[c.lv].name, caseTitle: c.title,
       rows: [
         { b: 'Q', label: '나의 질문', text: q },
-        { b: 'H', label: '찾은 오류', text: 'AI 문장 ' + CIRC[c.wrong] + ' “' + c.sents[c.wrong] + '”가 증거 #' + (r.ep + 1) + '(' + c.ev[r.ep].tag + ')에 어긋났어요.' },
+        { b: 'H', label: '찾은 오류', text: 'AI의 말 ' + CIRC[c.wrong] + ' “' + c.sents[c.wrong] + '”가 증거 「' + c.ev[r.ep].tag + '」에 어긋났어요.' },
         { b: 'C', label: 'AI와 함께 내린 판단', text: DEC_PAST[r.dec] + ' 최종 결론: ' + c.concl[r.co].t }
       ]
     };
@@ -723,7 +846,7 @@ var QHC = (function () {
     x.textAlign = 'left';
   }
 
-  return { CASES: CASES, LEVELS: LEVELS, THEMES: THEMES, GRADE_NAME: GRADE_NAME, QB: QB, QC: QC, CIRC: CIRC, DEC: DEC, DEC_FB: DEC_FB,
+  return { CASES: CASES, LEVELS: LEVELS, THEMES: THEMES, GRADE_NAME: GRADE_NAME, QB: QB, QC: QC, CIRC: CIRC, DEC: DEC, DEC_SUB: DEC_SUB, DEC_FB: DEC_FB,
     themeOf: themeOf, encode: encode, decode: decode, card: card, draw: draw };
 })();
 </script>
@@ -1188,17 +1311,32 @@ var ART = (function () {
 
   /* ---------- 공통 조각 ---------- */
   function homeBtn() { return '<button type="button" class="ghost" data-act="quit">처음으로</button>'; }
-  function scenePanel(c, hits) {
-    return '<aside class="evidence"><p class="lvtag">' + D.LEVELS[c.lv].name + ' · ' + D.LEVELS[c.lv].how + '</p><h3>' + esc(c.title) + '</h3>' +
-      '<div class="scene">' + ART.get(c.id) + '</div><p class="situ">' + esc(c.intro) + '</p><ol class="evlist">' +
-      c.ev.map(function (e, i) { return '<li class="ev' + (hits.indexOf(i) >= 0 ? ' hit' : '') + '"><span class="evno">증거 #' + (i + 1) + ' · ' + esc(e.tag) + '</span>' + esc(e.text) + '</li>'; }).join('') +
-      '</ol></aside>';
+  var ICON = {
+    target: '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="24" cy="24" r="9" fill="currentColor"/></svg>',
+    search: '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="20" cy="20" r="13" fill="none" stroke="currentColor" stroke-width="5"/><path d="M30 30 L43 43" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg>',
+    check: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 25 L20 35 L39 13" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    fix: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 39 L12 29 L31 10 L38 17 L19 36 Z" fill="currentColor"/><path d="M31 10 L38 17" stroke="#fff" stroke-width="2"/><path d="M9 39 L19 36" stroke="currentColor" stroke-width="3"/></svg>',
+    trash: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 14 H38" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M19 14 V9 H29 V14" fill="none" stroke="currentColor" stroke-width="4"/><path d="M13 18 H35 L32 41 H16 Z" fill="currentColor"/></svg>'
+  };
+  function caseHead(c) {
+    return '<div class="casehead"><span class="lvchip lv' + c.lv + '">' + D.LEVELS[c.lv].name + '</span><h2>' + esc(c.title) + '</h2></div>';
   }
-  function aiMsg(inner, wide) { return '<div class="msg ai' + (wide ? ' wide' : '') + '"><small><span class="ava" aria-hidden="true"></span>AI 탐정</small>' + inner + '</div>'; }
-  function meMsg(inner) { return '<div class="msg me"><small>나</small>' + inner + '</div>'; }
-  function fullAnswer(c, prefix) {
-    return aiMsg((prefix ? esc(prefix) + ' ' : '') + c.sents.map(function (s, i) { return D.CIRC[i] + ' ' + esc(s); }).join(' '));
+  // 큰 그림. mode: view(보기만) / find(증거 누르기) / found(찾음)
+  function sceneBox(c, mode, a) {
+    var h = '<div class="scenebox mode-' + mode + '"><div class="scene">' + ART.get(c.id) + '</div>';
+    if (mode !== 'view') {
+      (c.order || [0, 1, 2, 3]).forEach(function (i) {
+        var e = c.ev[i], r = e.hot, cls = 'hot';
+        if (mode === 'found' && i === a.ep) cls += ' ok';
+        else if (a.evWrong.indexOf(i) >= 0) cls += ' no';
+        if (mode === 'find' && a.evHintOn && c.evOk.indexOf(i) >= 0) cls += ' hint';
+        h += '<button type="button" class="' + cls + '" data-act="ev" data-i="' + i + '" aria-label="증거 ' + (i + 1) + ' ' + esc(e.tag) + '"' + (mode === 'found' ? ' disabled' : '') +
+          ' style="left:' + (r[0] / 6.4) + '%;top:' + (r[1] / 4) + '%;width:' + (r[2] / 6.4) + '%;height:' + (r[3] / 4) + '%"></button>';
+      });
+    }
+    return h + '</div>';
   }
+  function aiHead(text) { return '<div class="aihead"><span class="ava" aria-hidden="true"></span><b>AI 탐정</b>' + (text ? '<span>' + text + '</span>' : '') + '</div>'; }
   var FOCUS = ' data-focus="1"';
 
   /* ---------- 화면: 홈 ---------- */
@@ -1207,8 +1345,8 @@ var ART = (function () {
     var h = '<section class="home">';
     h += '<div class="hero2"><div class="hcopy">' +
       '<p class="eyebrow"><span>3분 체험</span>AI 탐정 사무소</p>' +
-      '<h1>AI가 틀린 곳,<br>찾을 수 있나요?</h1>' +
-      '<p class="lead">AI 탐정은 자료 정리를 잘하지만 가끔 실수해요. 증거와 맞지 않는 말을 찾아 AI와 함께 결론을 고치면 나만의 <b>탐정 신분증</b>을 받아요.</p>' +
+      '<h1>AI의 답,<br>믿어도 될까?</h1>' +
+      '<p class="lead">AI 탐정의 답 속 <b>거짓말 하나</b>를 그림 증거로 찾아내면 나만의 <b>탐정 신분증</b>을 받아요.</p>' +
       '<ol class="qhcline"><li><i class="q">Q</i>질문하기</li><li><i class="h">H</i>검토하기</li><li><i class="c">C</i>판단하기</li></ol>' +
       '</div><div class="hcards" aria-hidden="true"><canvas id="sampA" class="samp a"></canvas><canvas id="sampB" class="samp b"></canvas>' +
       (R.active ? '<span class="ribbon">당첨 신분증이 나오면 선물!</span>' : '') + '</div></div>';
@@ -1217,7 +1355,7 @@ var ART = (function () {
       return '<button type="button" class="level lv' + i + '" data-act="start" data-i="' + i + '">' +
         '<span class="thumb">' + (c ? ART.get(c.id) : '') + '</span>' +
         '<span class="lvbody"><span class="lvname">' + L.name + '</span><span class="lvhow">' + L.how + '</span>' +
-        '<span class="lvsub">' + ['그림 속 증거로 AI의 말을 확인해요', '날짜와 규칙으로 AI의 계산을 확인해요', '숫자 속 함정을 찾아요 · 선생님·학부모님 추천'][i] + '</span></span>' +
+        '<span class="lvsub">' + ['그림 속 단서로 확인해요', '날짜와 규칙으로 확인해요', '숫자 속 함정 · 어른 추천'][i] + '</span></span>' +
         '<span class="cta">시작</span></button>';
     }).join('') + '</div>';
     h += '<p class="today">' + (n ? '오늘 이 자리에서 <b>' + n + '명</b>의 탐정이 사건을 해결했어요' : '오늘의 첫 번째 탐정이 되어 주세요') + '</p>';
@@ -1233,80 +1371,79 @@ var ART = (function () {
     } catch (e) {}
   }
 
-  /* ---------- 화면: Q ---------- */
+  /* ---------- 화면: Q 질문하기 ---------- */
   function vAQ() {
-    var a = S.a, c = CASES[a.ci], h = '<div class="grid-a">' + scenePanel(c, []) + '<section class="work">';
-    h += '<h2><span class="badge b-q">Q</span>AI 탐정에게 무엇을 물어볼까요?</h2><p class="lead">왼쪽 그림과 증거를 살펴보고, AI에게 할 질문을 골라 보세요.</p>';
-    var qs = [c.qa, D.QB, D.QC];
+    var a = S.a, c = CASES[a.ci];
+    var h = '<div class="play"><section class="stagel">' + caseHead(c) + sceneBox(c, 'view', a) + '<p class="intro">' + esc(c.intro) + '</p></section><section class="side">';
+    h += '<h3 class="ask"><span class="badge b-q">Q</span>AI 탐정에게 무엇을 물어볼까요?</h3>';
     if (a.q1 === null) {
-      h += '<div class="opts">' + qs.map(function (q, i) { return '<button type="button" class="opt" data-act="aq" data-i="' + i + '"><span class="ql">질문 ' + (i + 1) + '</span>' + esc(q) + '</button>'; }).join('') + '</div><div class="row">' + homeBtn() + '</div>';
+      h += '<div class="bigqs">' +
+        '<button type="button" class="bigq" data-act="aq" data-i="0"><span class="ico ico-q">' + ICON.target + '</span><span class="bq"><b>“' + esc(c.qa) + '”</b><small>답만 물어보기</small></span></button>' +
+        '<button type="button" class="bigq" data-act="aq" data-i="1"><span class="ico ico-q">' + ICON.search + '</span><span class="bq"><b>“' + esc(c.qa) + ' ' + esc(D.QB) + '”</b><small>근거까지 물어보기</small></span></button>' +
+        '</div><div class="row">' + homeBtn() + '</div>';
     } else {
-      h += '<div class="chat">' + meMsg(esc(qs[a.q1]));
-      var answered = false;
-      if (a.q1 === 0) {
-        h += aiMsg(esc(c.short));
-        if (a.q2) { h += meMsg(esc(D.QB)) + fullAnswer(c); answered = true; }
-        h += '</div>';
-        if (!a.q2) h += '<p class="note"' + FOCUS + '>결론만 받으면 맞는지 틀린지 검토할 수 없어요. 근거를 물어볼까요?</p><div class="row"><button type="button" class="go" data-act="askReason">근거를 물어보기</button>' + homeBtn() + '</div>';
-        else h += '<p class="note good">근거를 들으니 이제 검토할 수 있어요.</p>';
-      } else {
-        h += fullAnswer(c, a.q1 === 2 ? '네, 증거 4개를 모두 확인했어요.' : '') + '</div>';
-        h += '<p class="note good">좋은 질문이에요! 근거를 물으면 AI의 판단을 검토할 수 있어요.' + (a.q1 === 2 ? ' 그런데 AI가 "확인했다"고 해도 정말 맞는지는 내가 확인해야 해요.' : '') + '</p>';
-        answered = true;
-      }
-      if (answered) h += '<div class="row"' + FOCUS + '><button type="button" class="go" data-act="to" data-s="a-h">검토하러 가기 <span class="k">H</span></button>' + homeBtn() + '</div>';
+      h += '<div class="chat"><div class="msg me">' + esc(c.qa) + '</div>' + '<div class="msg ai">' + aiHead() + '<p class="say">' + esc(c.short) + '</p></div></div>';
+      h += '<div class="nudge"' + FOCUS + '><b>잠깐! 답만 들으면 맞는지 확인할 수 없어요.</b><span>근거를 물어봐야 믿을지 말지 판단할 수 있어요.</span></div>' +
+        '<div class="row"><button type="button" class="go big" data-act="askReason">' + ICON.search + '근거도 물어보기</button>' + homeBtn() + '</div>';
     }
     return h + '</section></div>';
   }
 
-  /* ---------- 화면: H ---------- */
+  /* ---------- 화면: H 검토하기 ---------- */
   function vAH() {
     var a = S.a, c = CASES[a.ci];
-    var h = '<div class="grid-a">' + scenePanel(c, a.evDone ? [a.ep] : []) + '<section class="work">';
-    h += '<h2><span class="badge b-h">H</span>AI의 말, 증거와 맞나요?</h2><p class="lead">AI 탐정의 답에서 <b>증거와 맞지 않는 문장</b>을 눌러 보세요.</p>';
-    h += aiMsg(c.sents.map(function (s, i) {
-      var cls = (a.sentDone && i === c.wrong) ? ' ok' : (a.sentWrong.indexOf(i) >= 0 ? ' no' : '');
-      return '<button type="button" class="opt sent' + cls + '" data-act="sent" data-i="' + i + '"' + (a.sentDone ? ' disabled' : '') + '>' + D.CIRC[i] + ' ' + esc(s) + '</button>';
-    }).join(''), true);
-    if (a.sentMsg) h += '<p class="note bad gap"' + FOCUS + '>' + esc(a.sentMsg) + '</p>';
-    if (a.sentDone) {
-      h += '<p class="note good gap">' + (a.sentRevealed ? '정답을 알려 줄게요. ' : '맞아요! ') + '문장 ' + D.CIRC[c.wrong] + '가 증거와 어긋나요.</p>';
-      h += '<p class="sub"' + (a.evDone ? '' : FOCUS) + '>이 문장은 어떤 증거와 어긋나나요?</p><div class="opts two">' + c.ev.map(function (e, i) {
-        var cls = (a.evDone && i === a.ep) ? ' ok' : (a.evWrong.indexOf(i) >= 0 ? ' no' : '');
-        return '<button type="button" class="opt' + cls + '" data-act="ev" data-i="' + i + '"' + (a.evDone ? ' disabled' : '') + '>증거 #' + (i + 1) + ' · ' + esc(e.tag) + '</button>';
-      }).join('') + '</div>';
-      if (a.evMsg) h += '<p class="note bad"' + FOCUS + '>' + esc(a.evMsg) + '</p>';
-      if (a.evDone) h += '<div class="explain"><p class="note good">' + (a.evRevealed ? '정답을 알려 줄게요. ' : '정확해요! ') + esc(c.explain) + '</p><p class="note">' + esc(c.aiGood) + '</p></div>' +
-        '<div class="row"' + FOCUS + '><button type="button" class="go" data-act="to" data-s="a-c">판단하러 가기 <span class="k">C</span></button>' + homeBtn() + '</div>';
-    }
-    if (!a.evDone) h += '<div class="row">' + homeBtn() + '</div>';
+    var mode = !a.sentDone ? 'view' : (a.evDone ? 'found' : 'find');
+    var h = '<div class="play"><section class="stagel">' + caseHead(c) + sceneBox(c, mode, a);
+    if (mode === 'view') h += '<p class="intro">' + esc(c.intro) + '</p>';
+    else if (mode === 'find') h += '<p class="findtip' + (a.evMsg ? ' bad' : '') + '"' + FOCUS + '>' + (a.evMsg ? esc(a.evMsg) : '<b>' + ICON.search + '그림에서 ②가 틀렸다는 증거를 눌러요</b>') + '</p>';
+    else h += '<p class="findtip good"><b>증거 「' + esc(c.ev[a.ep].tag) + '」</b> ' + esc(c.ev[a.ep].text) + '</p>';
+    h += '</section><section class="side">';
+    h += '<h3 class="ask"><span class="badge b-h">H</span>AI의 답, 믿어도 될까?</h3>';
+    if (a.toast) h += '<p class="toast">' + esc(a.toast) + '</p>';
+    h += '<ol class="hsteps">' +
+      '<li class="' + (!a.sentDone ? 'now' : 'done') + '"><i>1</i>틀린 말 고르기</li>' +
+      '<li class="' + (a.sentDone && !a.evDone ? 'now' : (a.evDone ? 'done' : '')) + '"><i>2</i>그림에서 증거 찾기</li></ol>';
+    h += aiHead('의 답');
+    h += '<div class="claims">' + c.sents.map(function (s, i) {
+      var st = '', tag = '';
+      if (a.evDone && i === c.wrong) { st = ' lie'; tag = '<span class="stamp">거짓!</span>'; }
+      else if (a.sentDone && i === c.wrong) { st = ' sus'; tag = '<span class="ctag sus">' + ICON.search + '수상해요</span>'; }
+      else if (a.sentWrong.indexOf(i) >= 0) {
+        st = i < c.wrong ? ' ok' : ' dep';
+        tag = '<span class="why">' + esc(c.sentHint[i]) + '</span>';
+      }
+      return '<button type="button" class="claim' + st + '" data-act="sent" data-i="' + i + '"' + (a.sentDone ? ' disabled' : '') + '>' +
+        '<span class="cn">' + D.CIRC[i] + '</span><span class="ct">' + esc(s) + tag + '</span></button>';
+    }).join('') + '</div>';
+    if (!a.sentDone) h += '<p class="hintline">증거와 맞지 않는 말을 하나 눌러요</p>';
+    if (a.evDone) h += '<div class="explain"' + FOCUS + '><b>' + esc(c.explain) + '</b></div><div class="row"><button type="button" class="go big" data-act="to" data-s="a-c">판단하러 가기 <span class="k">C</span></button>' + homeBtn() + '</div>';
+    else h += '<div class="row">' + homeBtn() + '</div>';
     return h + '</section></div>';
   }
 
-  /* ---------- 화면: C (1단계: AI 답을 어떻게 쓸지 → 2단계: 최종 결론) ---------- */
+  /* ---------- 화면: C 판단하기 ---------- */
   function vAC() {
     var a = S.a, c = CASES[a.ci];
-    var h = '<div class="grid-a">' + scenePanel(c, [a.ep]) + '<section class="work">';
-    h += '<h2><span class="badge b-c">C</span>AI와 함께 결론을 고쳐요</h2>';
-    if (!a.cStep2) {
-      h += '<p class="lead">검토한 내용을 바탕으로, AI의 답을 어떻게 쓸지 정해요.</p>';
-      h += '<div class="opts">' + D.DEC.map(function (t, i) { return '<button type="button" class="opt' + (a.dec === i ? ' sel' : '') + '" data-act="dec" data-i="' + i + '">' + esc(t) + '</button>'; }).join('') + '</div>';
-      if (a.dec === 1) h += '<div class="chat">' + meMsg(esc(D.CIRC[c.wrong]) + ' 문장이 증거 #' + (a.ep + 1) + '과 맞지 않아. 다시 확인해 줄래?') + aiMsg(esc(c.aiFix)) + '</div>';
-      else if (a.dec !== null) h += '<p class="note">' + esc(D.DEC_FB[a.dec]) + '</p>';
-      if (a.dec !== null) h += '<div class="row"' + FOCUS + '><button type="button" class="go" data-act="cNext">최종 결론 고르기</button>' + homeBtn() + '</div>';
-      else h += '<div class="row">' + homeBtn() + '</div>';
+    var h = '<section class="cwrap"><h2 class="ctitle"><span class="badge b-c">C</span>그래서, AI의 답 믿어도 될까?</h2>';
+    h += '<div class="recap">' + c.sents.map(function (s, i) {
+      var k = i === c.wrong ? 'lie' : (i < c.wrong ? 'ok' : 'dep');
+      var lab = k === 'lie' ? '거짓' : (k === 'ok' ? '맞음' : '②에서 나온 말');
+      return '<div class="rc ' + k + '"><span class="rl">' + D.CIRC[i] + ' ' + lab + '</span><span>' + esc(s) + '</span></div>';
+    }).join('') + '</div>';
+    if (!a.fixed) {
+      var ic = [ICON.check, ICON.fix, ICON.trash];
+      h += '<div class="choices">' + D.DEC.map(function (t, i) {
+        var tried = a.decTried.indexOf(i) >= 0;
+        return '<button type="button" class="choice ch' + i + (tried ? ' tried' : '') + '" data-act="dec" data-i="' + i + '"' + (tried ? ' disabled' : '') + '>' +
+          '<span class="ico">' + ic[i] + '</span><b>' + esc(t) + '</b><small>' + esc(D.DEC_SUB[i]) + '</small>' +
+          (tried ? '<span class="fb">' + esc(D.DEC_FB[i]) + '</span>' : '') + '</button>';
+      }).join('') + '</div><div class="row">' + homeBtn() + '</div>';
     } else {
-      h += '<div class="picked"><span>내 선택</span><b>' + esc(D.DEC[a.dec]) + '</b><button type="button" class="ghost sm" data-act="cBack">바꾸기</button></div>';
-      if (a.dec === 1) h += aiMsg(esc(c.aiFix));
-      h += '<p class="sub">그렇다면 최종 결론은?</p><div class="opts">' + c.concl.map(function (k, i) {
-        var cls = a.co === i ? (k.k === 'bad' ? ' no' : ' ok') : '';
-        return '<button type="button" class="opt' + cls + '" data-act="co" data-i="' + i + '">' + esc(k.t) + '</button>';
-      }).join('') + '</div>';
-      if (a.co !== null) { var k = c.concl[a.co]; h += '<p class="note ' + (k.k === 'bad' ? 'bad' : 'good') + '">' + esc(k.fb) + '</p>'; }
-      var can = a.co !== null && c.concl[a.co].k !== 'bad';
-      h += '<div class="row"' + (a.co !== null ? FOCUS : '') + '><button type="button" class="go gold" data-act="finish"' + (can ? '' : ' disabled') + '>사건 해결! 신분증 받기</button>' + homeBtn() + '</div>';
+      h += '<div class="fixchat"><div class="msg me">②가 「' + esc(c.ev[a.ep].tag) + '」 증거와 안 맞아. 다시 확인해 줘!</div>' +
+        '<div class="msg ai">' + aiHead() + '<p class="say">' + esc(c.aiFix) + '</p></div></div>' +
+        '<div class="row"' + FOCUS + '><button type="button" class="go gold big" data-act="finish">사건 해결! 신분증 받기</button>' + homeBtn() + '</div>';
     }
-    return h + '</section></div>';
+    return h + '</section>';
   }
 
   /* ---------- 화면: 완료 ---------- */
@@ -1484,30 +1621,37 @@ var ART = (function () {
       var use = cand.length ? cand : pool, ci = use[Math.floor(Math.random() * use.length)];
       lastMap[lv] = ci; sset('qhc_lastcase', lastMap);
       S.start = Date.now();
-      S.a = { ci: ci, q1: null, q2: false, sentWrong: [], sentDone: false, sf: 1, sentRevealed: false, sentMsg: '',
-        evWrong: [], evDone: false, ef: 1, ep: null, evRevealed: false, evMsg: '', dec: null, co: null, cStep2: false };
+      S.a = { ci: ci, q1: null, toast: '', sentWrong: [], sentDone: false, sf: 1, evWrong: [], evDone: false, ef: 1, ep: null, evMsg: '', evHintOn: false,
+        decFirst: null, decTried: [], dec: null, fixed: false, co: 0 };
       S.screen = 'a-q';
     },
     quit: function () { wipe(); return false; },
     to: function (el) { S.screen = el.getAttribute('data-s'); },
-    aq: function (el, i) { S.a.q1 = i; },
-    askReason: function () { S.a.q2 = true; },
+    aq: function (el, i) {
+      S.a.q1 = i;
+      if (i === 1) { S.a.toast = '좋은 질문이에요! 근거를 알아야 믿을지 판단할 수 있어요.'; S.screen = 'a-h'; }
+    },
+    askReason: function () { S.a.toast = '근거를 물었더니 AI가 이유를 말해 줬어요. 이제 하나씩 확인해요.'; S.screen = 'a-h'; },
     sent: function (el, i) {
       var a = S.a, c = CASES[a.ci]; if (a.sentDone) return;
-      if (i === c.wrong) { a.sentDone = true; a.sentMsg = ''; return; }
-      a.sf = 0; if (a.sentWrong.indexOf(i) < 0) a.sentWrong.push(i); a.sentMsg = c.sentHint[i];
-      if (a.sentWrong.length >= 2) { a.sentDone = true; a.sentRevealed = true; a.sentMsg = ''; }
+      a.toast = '';
+      if (i === c.wrong) { a.sentDone = true; return; }
+      a.sf = 0; if (a.sentWrong.indexOf(i) < 0) a.sentWrong.push(i);
+      if (a.sentWrong.length >= 2) a.sentDone = true;   // 남은 하나가 틀린 말
     },
     ev: function (el, i) {
-      var a = S.a, c = CASES[a.ci]; if (a.evDone) return;
+      var a = S.a, c = CASES[a.ci]; if (a.evDone || !a.sentDone) return;
       if (c.evOk.indexOf(i) >= 0) { a.evDone = true; a.ep = i; a.evMsg = ''; return; }
-      a.ef = 0; if (a.evWrong.indexOf(i) < 0) a.evWrong.push(i); a.evMsg = c.evHint[i] || '이 증거와는 직접 어긋나지 않아요. 다른 증거를 살펴보세요.';
-      if (a.evWrong.length >= 2) { a.evDone = true; a.evRevealed = true; a.ep = c.evOk[0]; a.evMsg = ''; }
+      a.ef = 0; if (a.evWrong.indexOf(i) < 0) a.evWrong.push(i);
+      a.evMsg = c.evHint[i] || '이 증거로는 ②가 틀렸다고 말하기 어려워요. 다른 곳을 찾아요.';
+      if (a.evWrong.length >= 2) { a.evHintOn = true; a.evMsg = a.evMsg + ' 반짝이는 곳을 눌러 보세요!'; }
     },
-    dec: function (el, i) { S.a.dec = i; },
-    cNext: function () { S.a.cStep2 = true; lastScreen = null; },
-    cBack: function () { S.a.cStep2 = false; S.a.co = null; lastScreen = null; },
-    co: function (el, i) { S.a.co = i; },
+    dec: function (el, i) {
+      var a = S.a; if (a.fixed) return;
+      if (a.decFirst === null) a.decFirst = i;
+      if (i === 1) { a.fixed = true; a.dec = a.decFirst; return; }
+      if (a.decTried.indexOf(i) < 0) a.decTried.push(i);
+    },
     finish: function (el) { el.disabled = true; finish(); return false; },
     toCam: function () { S.camStep = 'consent'; S.camMsg = ''; S.screen = 'cam'; },
     camStart: function () { camStart(); return false; },
